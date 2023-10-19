@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Delay Calculator</title>
+</head>
+<body>
+    <h2>Sample Delay Calculator</h2>
+    <form id="calculatorForm">
+        <label for="temperature">Temperature (°C):</label>
+        <input type="number" id="temperature" name="temperature" required><br><br>
+
+        <label for="humidity">Relative Humidity (%):</label>
+        <input type="number" id="humidity" name="humidity" required><br><br>
+
+        <label for="distance">Distance (meters):</label>
+        <input type="number" id="distance" name="distance" required><br><br>
+
+        <label for="sampleRate">Sample Rate (samples/second):</label>
+        <input type="number" id="sampleRate" name="sampleRate" required><br><br>
+
+        <input type="button" value="Calculate" onclick="calculateDelay()">
+    </form>
+
+    <h3>Result:</h3>
+    <p id="result">Delay required: <span id="delaySamples">0</span> samples</p>
+
+    <script>
+        function calculateDelaySamples(temperature, humidity, distance, sampleRate) {
+            const c0 = 331.3;
+            const T0 = 273.15;
+            const T = temperature + T0;
+            const c = c0 * Math.sqrt(T / T0) + (0.6 + (0.003 * T) / (1 + 0.003 * T)) * Math.sqrt(humidity);
+            const N = (distance / c) * sampleRate;
+            return Math.round(N);
+        }
+
+        function calculateDelay() {
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const humidity = parseFloat(document.getElementById('humidity').value);
+            const distance = parseFloat(document.getElementById('distance').value);
+            const sampleRate = parseFloat(document.getElementById('sampleRate').value);
+
+            const delaySamples = calculateDelaySamples(temperature, humidity, distance, sampleRate);
+            document.getElementById('delaySamples').textContent = delaySamples;
+        }
+    </script>
+</body>
+</html>
